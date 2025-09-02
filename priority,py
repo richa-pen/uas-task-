@@ -1,0 +1,19 @@
+AGE_PRIORITY = {'star':3, 'triangle':2, 'square':1}
+EMERGENCY_PRIORITY = {'red':3, 'yellow':2, 'green':1}
+PAD_CAPACITY = [4,3,2]  # blue, pink, grey
+
+assignments = [[] for _ in range(3)]
+assigned = set()
+score_table = []
+for idx, casualty in enumerate(casualties):
+    for i, pad in enumerate(pads):
+        priority = AGE_PRIORITY[casualty['shape']] * EMERGENCY_PRIORITY[casualty['color']]
+        score_table.append((priority, distance_matrix[idx][i], i, idx, casualty))
+
+# Assign by score, then distance
+score_table.sort(key=lambda x: (-x, x[1]))
+for entry in score_table:
+    priority, dist, pad_idx, casualty_idx, casualty = entry
+    if len(assignments[pad_idx])<PAD_CAPACITY[pad_idx] and casualty_idx not in assigned:
+        assignments[pad_idx].append(casualty)
+        assigned.add(casualty_idx)
